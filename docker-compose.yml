@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  php:
+    container_name: ${APP_NAME}_php
+    build:
+      args:
+        user: www-data
+        uid: 1000
+      context: .
+      dockerfile: ./.docker/php/Dockerfile
+    restart: always
+    working_dir: /var/www/
+    environment:
+      PHP_INI_SCAN_DIR: "/usr/local/etc/php/custom.d:/usr/local/etc/php/conf.d"
+    volumes:
+      - ./:/var/www/
+      - ./.docker/php:/usr/local/etc/php/custom.d
+      - ./.docker/cache-grinds:/var/www/.docker/cache-grinds
+    networks:
+      net:
+        ipv4_address: ${NETWORK}.6
+
+networks:
+  net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${NETWORK}.0/24
