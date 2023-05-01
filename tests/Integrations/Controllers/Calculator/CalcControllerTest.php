@@ -34,10 +34,6 @@ class CalcControllerTest extends TestCase
 		$requestMock = $this->createMock(Request::class);
 		$requestMock->method('getParam')->willReturnOnConsecutiveCalls(...$input);
 
-		if (isset($expected['exception'])) {
-			$this->expectException(DivisionByZeroException::class);
-		}
-
 		$res = $this->calcController->calc($requestMock);
 
 		$expected = new Response($expected['result']);
@@ -90,7 +86,7 @@ class CalcControllerTest extends TestCase
 		];
 		yield 'Test div operation with zero' => [
 			'expected' => [
-				'exception' => DivisionByZeroException::class
+				'result' => 'You are about division by zero, zero is not allowed.'
 			],
 			'input' => [
 				'operation' => 'division',

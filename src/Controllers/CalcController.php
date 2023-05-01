@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Calculator\CalcFactory;
+use App\Calculator\Exceptions\DivisionByZeroException;
 use App\Utils\Request;
 use App\Utils\Response;
 
@@ -19,6 +20,12 @@ class CalcController
 
 		$calculator = $calcFactory->create($request->getParam('operation'));
 
-		return new Response($calculator->calc($request->getParam('num1'), $request->getParam('num2')));
+		try {
+			$res = $calculator->calc($request->getParam('num1'), $request->getParam('num2'));
+		} catch(DivisionByZeroException $exception) {
+			$res = "You are about division by zero, zero is not allowed.";
+		}
+
+		return new Response($res);
 	}
 }
